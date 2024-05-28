@@ -240,24 +240,4 @@ module.exports = function(app, db) {
             res.status(500).send('Ошибка при подключении к базе данных');
         });
     });
-
-    // app.post('/add_role_postgres', async (req, res) => {
-    //     const auth_employee = req.body;
-    //     module.exports = {auth_employee};
-    //     initializeSequelize().query('SELECT add_role(?, ?, ?, ?);', {
-    //         replacements: [auth_employee.login_new, auth_employee.password_new, auth_employee.type, auth_employee.id_employee],
-    //         type: QueryTypes.SELECT
-    //     })
-    //         .then(results => {
-    //             console.log(results);
-    //             res.status(200)
-    //             res.send('The role has been added successfully')
-    //         })
-    //         .catch(error => {
-    //             console.error('Error executing custom query:', error);
-    //             res.status(400)
-    //             res.send('error added role')
-    //         });
-    // });
-
 };
