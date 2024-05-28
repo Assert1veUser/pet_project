@@ -215,16 +215,6 @@ module.exports = function(app, db) {
         });
     });
 
-    app.post('/add_role_mongodb', (req, res) => {
-        const data = req.body;
-        module.exports = {data}
-        add_role().then(AllDocuments => {
-            res.status(200);
-            res.send(AllDocuments)
-        }).catch(err => {
-            console.error('Ошибка при подключении к базе данных:', err);
-            res.status(500).send('Ошибка при подключении к базе данных');
-        });
-    });
+
 
 };

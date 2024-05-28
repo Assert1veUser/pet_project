@@ -1,5 +1,6 @@
 const initializeSequelize = require('../backend/postgre_back/sequelize')
 const {QueryTypes} = require("sequelize");
+const {add_role} = require("../backend/mongo_back");
 module.exports = function(app, db) {
     const bodyParser = require('body-parser');
     app.use(bodyParser.json());
@@ -228,25 +229,35 @@ module.exports = function(app, db) {
         }
     });
 
-
-
-    app.post('/add_role_postgres', async (req, res) => {
+    app.post('/add_role', (req, res) => {
         const auth_employee = req.body;
-        module.exports = {auth_employee};
-        initializeSequelize().query('SELECT add_role(?, ?, ?, ?);', {
-            replacements: [auth_employee.login_new, auth_employee.password_new, auth_employee.type, auth_employee.id_employee],
-            type: QueryTypes.SELECT
-        })
-            .then(results => {
-                console.log(results);
-                res.status(200)
-                res.send('The role has been added successfully')
-            })
-            .catch(error => {
-                console.error('Error executing custom query:', error);
-                res.status(400)
-                res.send('error added role')
-            });
+        module.exports = {auth_employee}
+        add_role().then(AllDocuments => {
+            res.status(200);
+            res.send(AllDocuments)
+        }).catch(err => {
+            console.error('Ошибка при подключении к базе данных:', err);
+            res.status(500).send('Ошибка при подключении к базе данных');
+        });
     });
+
+    // app.post('/add_role_postgres', async (req, res) => {
+    //     const auth_employee = req.body;
+    //     module.exports = {auth_employee};
+    //     initializeSequelize().query('SELECT add_role(?, ?, ?, ?);', {
+    //         replacements: [auth_employee.login_new, auth_employee.password_new, auth_employee.type, auth_employee.id_employee],
+    //         type: QueryTypes.SELECT
+    //     })
+    //         .then(results => {
+    //             console.log(results);
+    //             res.status(200)
+    //             res.send('The role has been added successfully')
+    //         })
+    //         .catch(error => {
+    //             console.error('Error executing custom query:', error);
+    //             res.status(400)
+    //             res.send('error added role')
+    //         });
+    // });
 
 };

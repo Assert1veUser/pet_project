@@ -1,5 +1,7 @@
 const {MongoClient: MongoClient} = require('mongodb')
 const { ObjectId } = require('mongodb');
+const initializeSequelize = require('../backend/postgre_back/sequelize')
+const {QueryTypes} = require("sequelize");
 
 const select_server = async () =>{
     try {
@@ -344,20 +346,43 @@ const delete_check = async () =>{
 
 const add_role = async () =>{
     try {
-        const data = require('../routes/mongodb_routes')
-        const MongoDBclient = new MongoClient(`mongodb://${data.data.login}:${data.data.password}@127.0.0.1:27017/shop`)
+        const auth_employee = require('../routes/postgresql_routes')
+        const MongoDBclient = new MongoClient(`mongodb://${auth_employee.auth_employee.login}:${auth_employee.auth_employee.password}@127.0.0.1:27017/shop`)
         await MongoDBclient.connect()
         console.log("Успешно подключились к базе данных")
-        const result = await Promise.all([MongoDBclient
-            .db('shop').command({
-                createUser: data.data.login_new,
-                pwd: data.data.password_new,
-                roles: [
-                    { role: data.data.role, db: "shop" }
-                ]
+        if (auth_employee.auth_employee.type === "admin"){
+            const result = await Promise.all([MongoDBclient
+                .db('shop').command({
+                    createUser: auth_employee.auth_employee.login_new,
+                    pwd: auth_employee.auth_employee.password_new,
+                    roles: [
+                        { role: "dbOwner", db: "shop" }
+                    ]
+                })
+            ]);
+            await MongoDBclient.close();
+        }else {
+            const result = await Promise.all([MongoDBclient
+                .db('shop').command({
+                    createUser: auth_employee.auth_employee.login_new,
+                    pwd: auth_employee.auth_employee.password_new,
+                    roles: [
+                        {role: auth_employee.auth_employee.type, db: "shop"}
+                    ]
+                })
+            ]);
+            await MongoDBclient.close();
+        }
+        initializeSequelize().query('SELECT add_role(?, ?, ?, ?);', {
+            replacements: [auth_employee.auth_employee.login_new, auth_employee.auth_employee.password_new, auth_employee.auth_employee.type, auth_employee.auth_employee.id_employee],
+            type: QueryTypes.SELECT
+        })
+            .then(results => {
+                console.log(results);
             })
-        ]);
-        await MongoDBclient.close();
+            .catch(error => {
+                console.error('Error executing custom query:', error);
+            });
         return "Роль создана"
     } catch (e) {
         console.log(e)
