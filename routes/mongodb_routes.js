@@ -4,7 +4,7 @@ const {select_server, add_server, delete_server, select_cpu, add_cpu, delete_cpu
 module.exports = function(app, db) {
     const bodyParser = require('body-parser');
     app.use(bodyParser.json());
-    app.get('/server', (req, res) => {
+    app.post('/get_server', (req, res) => {
         const auth = req.body;
         module.exports = {auth};
         select_server().then(AllDocuments => {
@@ -39,7 +39,7 @@ module.exports = function(app, db) {
             res.status(500).send('Ошибка при подключении к базе данных');
         });
     });
-    app.get('/cpu', (req, res) => {
+    app.post('/get_cpu', (req, res) => {
         const auth = req.body;
         module.exports = {auth};
         select_cpu().then(AllDocuments => {
@@ -74,7 +74,7 @@ module.exports = function(app, db) {
             res.status(500).send('Ошибка при подключении к базе данных');
         });
     });
-    app.get('/ram', (req, res) => {
+    app.post('/get_ram', (req, res) => {
         const auth = req.body;
         module.exports = {auth};
         select_ram().then(AllDocuments => {
@@ -109,7 +109,7 @@ module.exports = function(app, db) {
             res.status(500).send('Ошибка при подключении к базе данных');
         });
     });
-    app.get('/drive', (req, res) => {
+    app.post('/get_drive', (req, res) => {
         const auth = req.body;
         module.exports = {auth};
         select_drive().then(AllDocuments => {
@@ -144,7 +144,7 @@ module.exports = function(app, db) {
             res.status(500).send('Ошибка при подключении к базе данных');
         });
     });
-    app.get('/client', (req, res) => {
+    app.post('/get_client', (req, res) => {
         const auth = req.body;
         module.exports = {auth};
         select_client().then(AllDocuments => {
@@ -179,7 +179,7 @@ module.exports = function(app, db) {
             res.status(500).send('Ошибка при подключении к базе данных');
         });
     });
-    app.get('/check', (req, res) => {
+    app.post('/get_check', (req, res) => {
         const auth = req.body;
         module.exports = {auth};
         select_check().then(AllDocuments => {

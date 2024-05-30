@@ -12,7 +12,7 @@ module.exports = function(app, db) {
             .catch(err => { console.error('Unable to connect to the database:', err) &&
             res.send('Unable to connect to the database:', err) && res.status(400);});;
     });
-    app.get('/employee', async (req, res) => {
+    app.post('/get_employee', async (req, res) => {
         const auth_employee = req.body;
         module.exports = {auth_employee};
         const Employee = require("../backend/postgre_back/Employee")
@@ -86,7 +86,7 @@ module.exports = function(app, db) {
 
 
 
-    app.get('/room', async (req, res) => {
+    app.post('/get_room', async (req, res) => {
         const auth_employee = req.body;
         module.exports = {auth_employee};
         const Room = require("../backend/postgre_back/room")
@@ -159,7 +159,7 @@ module.exports = function(app, db) {
 
 
 
-    app.get('/task', async (req, res) => {
+    app.post('/get_task', async (req, res) => {
         const auth_employee = req.body;
         module.exports = {auth_employee};
         const Task = require("../backend/postgre_back/task")
